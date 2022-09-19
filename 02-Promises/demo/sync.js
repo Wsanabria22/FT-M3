@@ -38,6 +38,10 @@ primerMetodo()
    });
 
 
+// var p1 = primerMetodo();
+// var p2 = segundoMetodo();
+// var p3 = tercerMetodo();
+
 p1.then(funcion(valordep1) {
   return p2; // si p2  es una promesa;
 }).then(function(valordeP2) {

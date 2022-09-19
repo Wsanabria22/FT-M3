@@ -11,7 +11,6 @@
 
 'use strict';
 
-const { reject } = require('bluebird');
 var Promise = require('bluebird'),
     exerciseUtils = require('./utils');
 
@@ -45,22 +44,14 @@ function problemA () {
    */
 
   // callback version
-  // readFile('poem-one/stanza-01.txt', function (err, stanza) {
+  // readFile('poem-one/stanza-01.txt', function (err, data) {
   //   console.log('-- A. callback version --');
-  //   blue(stanza);
+  //   blue(data);
   // });
 
   // promise version
   promisifiedReadFile('poem-one/stanza-01.txt')
-  .then(stanza => blue(stanza));
-
-  // var readFilePromise = new Promise(function(resolve, reject) {
-  //   readFile('poem-one/stanza-01.txt', function (err, stanza) {
-  //     if (err) return reject(Error('No se pudo leer el archivo')) 
-  //     console.log('-- A. Promise version --');
-  //     resolve(blue(stanza));
-  //   });
-  // });
+  .then(data => blue(data))
 
 }
 
@@ -83,10 +74,17 @@ function problemB () {
   // });
 
   // promise version
-  promisifiedReadFile('poem-one/stanza-02.txt')
-  .then(stanza2 => blue(stanza2));
-  promisifiedReadFile('poem-one/stanza-03.txt')
-  .then(stanza3 => blue(stanza3));
+  promisifiedReadFile('poem-one/stanza-02.txt') // 10 seg
+  .then(data => blue(data))
+
+  promisifiedReadFile('poem-one/stanza-03.txt') // 8 seg
+  .then(data => blue(data)) 
+
+  // a(77) --> 2 --------------------> blue
+  // a(80) ---> 3 ----> blue
+
+  // event loop a77, a80 
+  // queue ? a80, a77
 
 }
 
@@ -114,13 +112,13 @@ function problemC () {
 
   // promise version (hint: don't need to nest `then` calls)
   promisifiedReadFile('poem-one/stanza-02.txt')
-  .then(stanza2 => { 
-    blue(stanza2);
-    return promisifiedReadFile('poem-one/stanza-03.txt');
+  .then(data => {
+    blue(data)
+    return promisifiedReadFile('poem-one/stanza-03.txt')
+  }).then(data  => {
+    blue (data)
+   console.log('done')
   })
-  .then(stanza3 => blue(stanza3));
-  console.log('done')
-
 }
 
 function problemD () {
@@ -138,9 +136,10 @@ function problemD () {
   // });
 
   // promise version
-  promisifiedReadFile('poem-one/wrong-file-name.txt')
-  .then(stanza3 => blue(stanza3))
-  .catch(err => magenta(new Error(err)));
+  promisifiedReadFile('poem-one/wrong-file-name.txt') // 10 seg
+  .then(data => blue(data))
+  .catch(err => magenta(new Error(err)))
+
 
 }
 
@@ -166,13 +165,14 @@ function problemE () {
   // });
 
   // promise version
-  promisifiedReadFile('poem-one/stanza-03.txt')
-  .then(stanza2 => { 
-    blue(stanza2);
-    return promisifiedReadFile('poem-one/wrong-file-name.txt')
+  promisifiedReadFile('poem-one/stanza-03') // 10 seg
+  .then(data => {
+    blue(data)
+    return  promisifiedReadFile('poem-one/wrong-file-name.txt')
   })
-  .then(stanza3 => blue(stanza3))
+  .then(data => blue(data))
   .catch(err => magenta(new Error(err)))
+
 
 }
 
@@ -203,13 +203,15 @@ function problemF () {
   // });
 
   // promise version
-  promisifiedReadFile('poem-one/stanza-03.txt')
-  .then(stanza2 => { 
-    blue(stanza2);
-    return promisifiedReadFile('poem-one/wrong-file-name.txt')
+  promisifiedReadFile('poem-one/stanza-03.txt') // 10 seg
+  .then(data => {
+    blue(data)
+    return  promisifiedReadFile('poem-one/wrong-file-name.txt')
   })
-  .then(stanza3 => blue(stanza3))
+  .then(data => blue(data))
   .catch(err => magenta(new Error(err)))
-  .finally(()=>console.log('done'))
+  .finally(() => console.log('done'))
+
+
 
 }

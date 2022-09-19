@@ -50,11 +50,11 @@ function problemA () {
   // );
 
   // promise version
-    const file01 = promisifiedReadFile('poem-one/stanza-01.txt').then(st1 => blue(st1));
-    const file02 = promisifiedReadFile('poem-one/stanza-02.txt').then(st2 => blue(st2));
-    Promise.all([file01, file02])
-    .then(() => {console.log('done')})
-    // .catch(error => magenta(new Error(err)))
+ let one = promisifiedReadFile('poem-two/stanza-01.txt').then(data => blue(data))
+ let two = promisifiedReadFile('poem-two/stanza-02.txt').then(data => blue(data))
+
+Promise.all([one, two]).then(()=> console.log('done'))
+
 }
 
 function problemB () {
@@ -71,6 +71,8 @@ function problemB () {
     return 'poem-two/' + 'stanza-0' + n + '.txt';
   });
 
+
+
   // callback version
   // async.each(filenames,
   //   function (filename, eachDone) {
@@ -86,12 +88,12 @@ function problemB () {
   // );
 
   // promise version
-  // ???
-  let promesas = filenames.map(file => promisifiedReadFile(file).then(stanza => blue(stanza)));
-  // [console.log(st1), console.log(st2), ...]
-  Promise.all(promesas)
-  .then(() => console.log('done'))
+var promesas = filenames.map(el => promisifiedReadFile(el).then(data =>blue(data)))
+  // 
+Promise.all(promesas).then(() => console.log('done'))
 }
+
+
 
 function problemC () {
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -104,11 +106,9 @@ function problemC () {
    *
    */
 
-  var filenames = [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) {
-    return 'poem-two/' + 'stanza-0' + n + '.txt';
-  });
+  
 
-  // callback version
+  // // callback version
   // async.eachSeries(filenames,
   //   function (filename, eachDone) {
   //     readFile(filename, function (err, stanza) {
@@ -122,16 +122,21 @@ function problemC () {
   //   }
   // );
 
-  // promise version
-  // ???
-  let promesas = filenames.map(file => promisifiedReadFile(file));
-  // [console.log(st1), console.log(st2), ...]
-  Promise.all(promesas)
-  .then((stanzas) => {
-    stanzas.forEach(stanza => blue(stanza));
-    console.log('done');
-  })
+  var filenames = [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) {
+    return 'poem-two/' + 'stanza-0' + n + '.txt';
+  }); //['poem-two/stanza-01.txt', 'poem-two/stanza-02.txt', 'poem-two/stanza-03.txt' ... ]
 
+// for (let i = 1, p= promisifiedReadFile(filenames[0]); i <= filenames.length; i++ ) {
+//   p = p.then(stanza => {
+//     blue(stanza)
+//     if (i === filenames.length){
+//       console.log('done')
+//     } else {
+//       return promisifiedReadFile(filenames[i])
+//     }
+//   })
+// }
+Promise.each(filenames, el => promisifiedReadFile(el).then(data => blue(data))).then(()=> console.log('done'))
 }
 
 function problemD () {
@@ -168,16 +173,7 @@ function problemD () {
   // );
 
   // promise version
-  // ???
-  let promesas = filenames.map(file => promisifiedReadFile(file));
-  // [console.log(st1), console.log(st2), ...]
-  Promise.all(promesas)
-  .then((stanzas) => {
-    stanzas.forEach(stanza => blue(stanza));
-    // console.log('done');
-  })
-  .catch(error => magenta(new Error(error)))
-  .finally(() => console.log('done'))
+  Promise.each(filenames, el => promisifiedReadFile(el).then(data => blue(data))).then(()=> console.log('done')).catch((err) => magenta(err))
 
 }
 
@@ -189,12 +185,7 @@ function problemE () {
    */
 
   var fs = require('fs');
-  function promisifiedWriteFile (filename, data) {
-    return new Promise(function(resolve, reject){ 
-      fs.writeFile(filename, data, 'utf-8', (err,data)=>{
-        if (err) return reject(err);
-        resolve('archivo creado');
-      })
-    })
+  function promisifiedWriteFile (filename, str) {
+    // tu código aquí
   }
 }
