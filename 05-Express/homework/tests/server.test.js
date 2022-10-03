@@ -110,6 +110,7 @@ describe('Request', () => {
   beforeEach(() => {
     // Reset posts before each test. Note that we must modify the array inline,
     // not reassign the array.
+    jest.setTimeout(60000);
     server.posts.splice(0, server.posts.length);
   });
 
